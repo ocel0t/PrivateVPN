@@ -1,0 +1,4 @@
+#!/bin/bash
+# PiVPN installation
+
+curl -L https://install.pivpn.io | bash
