@@ -1,0 +1,41 @@
+dev tap0
+proto tcp
+port 443
+ca /etc/openvpn/easy-rsa/pki/ca.crt
+cert /etc/openvpn/easy-rsa/pki/issued/rpi4_ce7a01e8-5761-48db-ab37-8563a2c2ec49.crt
+key /etc/openvpn/easy-rsa/pki/private/rpi4_ce7a01e8-5761-48db-ab37-8563a2c2ec49.key
+dh none
+ecdh-curve prime256v1
+topology subnet
+#server 10.226.96.0 255.255.255.0
+server-bridge 192.168.2.59 255.255.255.0 192.168.2.128 192.168.2.254
+# Set your primary domain name server address for clients
+push "dhcp-option DNS 9.9.9.9"
+push "dhcp-option DNS 149.112.112.112"
+# Prevent DNS leaks on Windows
+push "block-outside-dns"
+# Override the Client default gateway by using 0.0.0.0/1 and
+# 128.0.0.0/1 rather than 0.0.0.0/0. This has the benefit of
+# overriding but not wiping out the original default gateway.
+push "redirect-gateway def1"
+client-to-client
+client-config-dir /etc/openvpn/ccd
+keepalive 15 120
+remote-cert-tls client
+tls-version-min 1.2
+ tls-crypt /etc/openvpn/easy-rsa/pki/ta.key
+cipher AES-256-CBC
+auth SHA256
+user openvpn
+group openvpn
+persist-key
+persist-tun
+crl-verify /etc/openvpn/crl.pem
+status /var/log/openvpn-status.log 20
+status-version 3
+syslog
+verb 3
+#DuplicateCNs allow access control on a less-granular, per user basis.
+#Remove # if you will manage access by user instead of device. 
+#duplicate-cn
+# Generated for use by PiVPN.io
